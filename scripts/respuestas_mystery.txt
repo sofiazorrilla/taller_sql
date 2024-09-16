@@ -1,0 +1,64 @@
+SELECT *
+  FROM crime_scene_report
+  WHERE type = 'murder' AND city = 'SQL City'
+
+20180115
+Security footage shows that there were 2 witnesses. The first witness lives at the last house on "Northwestern Dr". The second witness, named Annabel, lives somewhere on "Franklin Ave".
+
+SELECT * 
+FROM person
+WHERE address_street_name = 'Northwestern Dr'
+ORDER BY address_number DESC 
+LIMIT 1
+
+Testigo1: 
+id	name	license_id	address_number	address_street_name	ssn
+14887	Morty Schapiro	118009	4919	Northwestern Dr	111564949
+
+I heard a gunshot and then saw a man run out. He had a "Get Fit Now Gym" bag. The membership number on the bag started with "48Z". Only gold members have those bags. The man got into a car with a plate that included "H42W".
+
+SELECT * 
+FROM person p
+LEFT JOIN drivers_license dl ON p.license_id = dl.id
+JOIN get_fit_now_member gfnm ON p.id = gfnm.person_id
+--WHERE dl.plate_number LIKE '%H42W%'
+WHERE gfnm.id LIKE '48Z%'
+
+id	name	license_id	address_number	address_street_name	ssn	id	age	height	eye_color	hair_color	gender	plate_number	car_make	car_model	id	person_id	name	membership_start_date	membership_status
+67318	Jeremy Bowers	423327	530	Washington Pl, Apt 3A	871539279	423327	30	70	brown	brown	male	0H42W2	Chevrolet	Spark LS	48Z55	67318	Jeremy Bowers	20160101	gold
+
+I was hired by a woman with a lot of money. I don't know her name but I know she's around 5'5" (65") or 5'7" (67"). She has red hair and she drives a Tesla Model S. I know that she attended the SQL Symphony Concert 3 times in December 2017.
+
+
+SELECT * 
+FROM person
+WHERE name LIKE 'Annabel%' AND address_street_name = 'Franklin Ave'
+
+Testigo 2:
+id	name	license_id	address_number	address_street_name	ssn
+16371	Annabel Miller	490173	103	Franklin Ave	318771143
+
+I saw the murder happen, and I recognized the killer from my gym when I was working out last week on January the 9th.
+
+
+SELECT fb.person_id,
+       p.name,
+       COUNT(fb.event_name) AS ntimes,
+       fb.event_name,
+       fb.date / 100 AS year_month,
+       dl.hair_color,
+       dl.height,
+       dl.car_model,
+       dl.car_make
+FROM person p
+JOIN drivers_license dl ON p.license_id = dl.id
+JOIN facebook_event_checkin fb ON p.id = fb.person_id
+WHERE dl.car_make LIKE 'Tesla' 
+  AND dl.car_model = 'Model S' 
+  AND fb.event_name LIKE '%SQL Symphony Concert%' 
+  AND dl.hair_color = 'red' 
+  AND dl.height >= 65 
+  AND dl.height <= 67
+GROUP BY fb.person_id, fb.event_name, year_month
+HAVING ntimes = 3
+   AND year_month = 201712;
