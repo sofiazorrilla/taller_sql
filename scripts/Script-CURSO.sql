@@ -192,3 +192,95 @@ DROP VIEW journal_counts;
 
 ---Ejercicio: Escribe una consulta CREATE VIEW que UNA la tabla de artículos con la tabla de revistas en ISSNs y devuelva el CONTADOR de registros de artículos agrupados por el Título de la Revista en orden DESC.
 
+--- CREATE TABLES 
+--Crear tabla con nombre: journals con información acerca de las revistas
+CREATE TABLE journals_test(id text, "ISSN-L" text, ISSNs text, PublisherId text, Journal_Title text);
+
+--- ELIMINAR TABLAS
+--Eliminar una tabla (esto no se puede deshacer!!)
+DROP TABLE journals_test;
+
+--CREAR UNA TABLA ESPECIFICANDO PRIMARY KEY Y RESTRICCIONES
+
+--El tipo de restricciones y el cómo se nombran depende del DBMS que estemos usando, en nuestro caso SQLite:
+CREATE TABLE "journals_test" (
+	"id"            INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"ISSN-L"        TEXT,
+	"ISSNs"	        TEXT,
+	"PublisherId"   INTEGER,
+	"Journal_Title"	TEXT,
+	CONSTRAINT "PublisherId" FOREIGN KEY("PublisherId") REFERENCES "publishers"("id") 
+); 
+
+--INSERT INTO registros nuevos
+INSERT INTO "journals_test"
+VALUES (1,'2077-0472','2077-0472',2,'Agriculture');
+INSERT INTO "journals_test"
+VALUES (2,'2073-4395','2073-4395',2,'Agronomy');
+INSERT INTO "journals_test"
+VALUES (3,'2076-2616','2076-2616',2,'Animals');
+
+--INSERT INTO desde una tabla existente
+INSERT INTO "journals_test" 
+SELECT * 
+FROM journals
+WHERE ISSNs="2056-9890";
+
+INSERT INTO "journals_test" 
+SELECT * 
+FROM journals
+WHERE Journal_Title LIKE "Bio%";
+
+--UPDATE valores de un campo en una entrada (esta acción no se puede deshacer)
+
+UPDATE journals_test
+SET "ISSN-L" = "2076-2615", ISSNs = "2076-2615"
+WHERE id = 3;
+
+--UPDATE multiples filas
+UPDATE journals_test
+SET Journal_Title = UPPER(Journal_Title);
+
+--DELETE: eliminar filas de la tabla
+DELETE FROM journals_test
+WHERE Journal_Title = 'ANIMALS';
+
+
+--EJERCICIO: 
+/*Write an SQL statement to add the journal “New Journal of Physics” (ISSNs & ISSNs: 1367-2630; publisher: “Institute of Physics (IOP)”) to the table journals. You need to add the publisher “IOP” to the table publishers as well.
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,16 @@
+---
+title: "Introducción a operaciones simples"
+format: revealjs
+editor: source
+filters: 
+  - interactive-sql
+databases:
+  - name: hr
+    path: "https://raw.githubusercontent.com/sofiazorrilla/taller_sql/refs/heads/main/data/doaj-article-sample.db.sql"
+---
+
+## Test
+
+```{.sql .interactive .hr}
+select * from articles;
+```
